@@ -6,17 +6,17 @@
     {
       "id": "f11d7033-fc12-4455-857b-8e2ab8ebfc37",
       "status": "failed",
-      "error": "Mailtrap API error: {\"errors\":[\"Unauthorized\"]}"
+      "error": "MAILING API error: {\"errors\":[\"Unauthorized\"]}"
     },
     {
       "id": "95f5f06d-a063-427f-9fe9-aede74e7011e",
       "status": "failed",
-      "error": "Mailtrap API error: {\"errors\":[\"Unauthorized\"]}"
+      "error": "MAILING API error: {\"errors\":[\"Unauthorized\"]}"
     },
     {
       "id": "d0174253-f837-4864-a4d3-f94404e9b931",
       "status": "failed",
-      "error": "Mailtrap API error: {\"errors\":[\"Unauthorized\"]}"
+      "error": "MAILING API error: {\"errors\":[\"Unauthorized\"]}"
     }
   ]
 }

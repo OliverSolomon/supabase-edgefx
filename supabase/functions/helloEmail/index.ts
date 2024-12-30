@@ -25,7 +25,7 @@ type ProcessingResult = {
 const requiredEnvVars = {
   SUPABASE_URL: Deno.env.get('URL_SUPABASE'),
   SUPABASE_SERVICE_ROLE_KEY: Deno.env.get('SERVICE_ROLE_KEY_SUPABASE'),
-  MAILTRAP_TOKEN: Deno.env.get('MAILTRAP_TOKEN'),
+  MAILING_TOKEN: Deno.env.get('MAILING_TOKEN'),
 };
 
 // Validate all required environment variables are present
@@ -59,11 +59,11 @@ async function processEmailLog(
   email: EmailLog
 ): Promise<ProcessingResult> {
   try {
-    // Send email via Mailtrap
-    const response = await fetch('https://send.api.mailtrap.io/api/send', {
+    // Send email via MAILING
+    const response = await fetch('https://send.api.MAILING.io/api/send', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${requiredEnvVars.MAILTRAP_TOKEN}`,
+        'Authorization': `Bearer ${requiredEnvVars.MAILING_TOKEN}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -84,7 +84,7 @@ async function processEmailLog(
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(`Mailtrap API error: ${JSON.stringify(errorData)}`);
+      throw new Error(`MAILING API error: ${JSON.stringify(errorData)}`);
     }
 
     // Update email status to success
