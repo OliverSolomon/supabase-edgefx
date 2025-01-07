@@ -59,8 +59,9 @@ async function processEmailLog(
   email: EmailLog
 ): Promise<ProcessingResult> {
   try {
-    // Send email via MAILING
-    const response = await fetch('https://send.api.MAILING.io/api/send', {
+    // Send email
+    // const response = await fetch('https://send.api.mailtrap.io/api/send', {
+    const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${requiredEnvVars.MAILING_TOKEN}`,
@@ -68,13 +69,13 @@ async function processEmailLog(
       },
       body: JSON.stringify({
         from: { 
-          email: 'noreply@sautisalama.com', 
-          name: 'Sauti Salama' 
+          email: 'noreply@spearcad.com', 
+          name: 'Spearcad' 
         },
         to: [{ 
           email: email.metadata.email 
         }],
-        subject: 'Report Reminder - Sauti Salama',
+        subject: 'Report Reminder - Spearcad',
         html: generateEmailContent(
           email.metadata.username,
           email.metadata.last_report_time
