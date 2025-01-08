@@ -35,13 +35,13 @@ AS $$
         ur.username,
         ur.last_report_time
     FROM user_reports ur
-    LEFT JOIN latest_successful_emails le ON ur.user_id = le.user_id
+    LEFT JOIN latest_emails le ON ur.user_id = le.user_id
     WHERE 
         -- Include users with no reports OR reports older than 5 minutes
         (ur.last_report_time IS NULL OR ur.last_report_time < NOW() - INTERVAL '5 minutes')
         AND (
-            -- No previous successful email OR last successful reminder was more than 1 hour ago
+            -- No previous reminder email OR last reminder was more than 1 hour ago
             le.last_email_sent IS NULL 
-            OR le.last_email_sent < NOW() - INTERVAL '1 hour'
+            OR le.last_email_sent < NOW() - INTERVAL '10 minutes'
         );
 $$ LANGUAGE sql SECURITY DEFINER; 

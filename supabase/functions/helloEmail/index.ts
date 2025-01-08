@@ -37,15 +37,15 @@ Object.entries(requiredEnvVars).forEach(([name, value]) => {
 function generateEmailContent(username: string, lastReportTime?: string): string {
   const greeting = `Hello ${username}`;
   const lastReportMessage = lastReportTime 
-    ? `Your last report was submitted on ${new Date(lastReportTime).toLocaleString()}.`
-    : "We haven't received any reports from you yet.";
+    ? `Your last completed component was submitted on ${new Date(lastReportTime).toLocaleString()}.`
+    : "We haven't received any component completions from you yet.";
 
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <h1 style="color: #333;">${greeting}</h1>
-      <p>We noticed you haven't submitted a report recently.</p>
+      <p>We noticed you haven't filled a component recently.</p>
       <p>${lastReportMessage}</p>
-      <p>Please take a moment to submit your report. Regular reporting helps us provide better support.</p>
+      <p>Please take a moment to fill or review components. Regular filling of components helps you get more points.</p>
       <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
         <p style="margin: 0;">If you need any assistance, please don't hesitate to reach out to our support team.</p>
       </div>
