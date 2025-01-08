@@ -1,22 +1,10 @@
 {
   "success": true,
   "processed": 3,
-  "stats": { "failed": 3 },
+  "stats": { "success": 3 },
   "results": [
-    {
-      "id": "f11d7033-fc12-4455-857b-8e2ab8ebfc37",
-      "status": "failed",
-      "error": "MAILING API error: {\"errors\":[\"Unauthorized\"]}"
-    },
-    {
-      "id": "95f5f06d-a063-427f-9fe9-aede74e7011e",
-      "status": "failed",
-      "error": "MAILING API error: {\"errors\":[\"Unauthorized\"]}"
-    },
-    {
-      "id": "d0174253-f837-4864-a4d3-f94404e9b931",
-      "status": "failed",
-      "error": "MAILING API error: {\"errors\":[\"Unauthorized\"]}"
-    }
+    { "id": "28b15c09-bbbb-451c-9fd7-e9e9ac003c0b", "status": "success" },
+    { "id": "16db97a6-f1ed-4a35-b938-cb8ed0f738f0", "status": "success" },
+    { "id": "60b5bf16-0dc6-4eab-815e-a51d507403db", "status": "success" }
   ]
 }
