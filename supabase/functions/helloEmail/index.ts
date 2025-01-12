@@ -21,6 +21,63 @@ type ProcessingResult = {
   error?: string;
 }
 
+type EmailProvider = 'mailtrap' | 'sendgrid';
+
+// Configuration object for email providers
+const EMAIL_CONFIG = {
+  mailtrap: {
+    endpoint: "https://send.api.mailtrap.io/api/send",
+    formatRequest: formatMailtrapRequest,
+  },
+  sendgrid: {
+    endpoint: "https://api.sendgrid.com/v3/mail/send",
+    formatRequest: formatSendgridRequest,
+  }
+};
+
+function formatMailtrapRequest(params: {
+  to: string;
+  fromEmail: string;
+  fromName: string;
+  subject: string;
+  htmlContent: string;
+}) {
+  return {
+    from: {
+      email: params.fromEmail,
+      name: params.fromName
+    },
+    to: [{
+      email: params.to
+    }],
+    subject: params.subject,
+    html: params.htmlContent
+  };
+}
+
+function formatSendgridRequest(params: {
+  to: string;
+  fromEmail: string;
+  fromName: string;
+  subject: string;
+  htmlContent: string;
+}) {
+  return {
+    personalizations: [{
+      to: [{ email: params.to }]
+    }],
+    from: {
+      email: params.fromEmail,
+      name: params.fromName
+    },
+    subject: params.subject,
+    content: [{
+      type: 'text/html',
+      value: params.htmlContent
+    }]
+  };
+}
+
 // Environment variable validation
 const requiredEnvVars = {
   SUPABASE_URL: Deno.env.get('URL_SUPABASE'),
@@ -32,9 +89,15 @@ const requiredEnvVars = {
 Object.entries(requiredEnvVars).forEach(([name, value]) => {
   if (!value) throw new Error(`Missing required environment variable: ${name}`);
 });
-
 // Email template function for consistent formatting
 function generateEmailContent(username: string, lastReportTime?: string): string {
+
+  const fromEmail = Deno.env.get('FROM_EMAIL');
+  const fromName = Deno.env.get('FROM_NAME');
+
+  const mailtrapApiLink = "https://send.api.mailtrap.io/api/send";
+  const sendgridApiLink = "https://api.sendgrid.com/v3/mail/send";
+
   const greeting = `Hello ${username}`;
   const lastReportMessage = lastReportTime 
     ? `Your last completed component was submitted on ${new Date(lastReportTime).toLocaleString()}.`
@@ -59,30 +122,27 @@ async function processEmailLog(
   email: EmailLog
 ): Promise<ProcessingResult> {
   try {
-    // Send email
-    const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
+    const provider: EmailProvider = 'mailtrap'; // Change this to 'sendgrid' if needed
+    const { endpoint, formatRequest } = EMAIL_CONFIG[provider];
+    
+    const emailParams = {
+      to: email.metadata.email,
+      fromEmail: Deno.env.get('FROM_EMAIL') || '',
+      fromName: Deno.env.get('FROM_NAME') || '',
+      subject: 'Report Reminder - Spearcad',
+      htmlContent: generateEmailContent(
+        email.metadata.username,
+        email.metadata.last_report_time
+      )
+    };
+
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${requiredEnvVars.MAILING_TOKEN}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        personalizations: [{
-          to: [{ email: email.metadata.email }]
-        }],
-        from: { 
-          email: 'no-reply@spearcad.com', 
-          name: 'Spearcad' 
-        },
-        subject: 'Report Reminder - Spearcad',
-        content: [{
-          type: 'text/html',
-          value: generateEmailContent(
-            email.metadata.username,
-            email.metadata.last_report_time
-          )
-        }]
-      })
+      body: JSON.stringify(formatRequest(emailParams))
     });
 
     if (!response.ok) {
