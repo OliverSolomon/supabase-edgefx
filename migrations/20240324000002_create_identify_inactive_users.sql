@@ -1,3 +1,9 @@
+drop trigger if exists handle_reports_updated_at on public.reports;
+drop trigger if exists handle_users_updated_at on public.users;
+drop function if exists public.handle_updated_at();
+drop table if exists public.reports;
+drop table if exists public.users;
+
 -- Create function to identify users needing reminders
 CREATE OR REPLACE FUNCTION public.identify_inactive_users()
 RETURNS TABLE (
@@ -40,7 +46,7 @@ AS $$
         -- Include users with no reports OR reports older than 5 minutes
         (ur.last_report_time IS NULL OR ur.last_report_time < NOW() - INTERVAL '5 minutes')
         AND (
-            -- No previous reminder email OR last reminder was more than 1 hour ago
+            -- No previous reminder email OR last reminder was more than 10 minutes ago
             le.last_email_sent IS NULL 
             OR le.last_email_sent < NOW() - INTERVAL '10 minutes'
         );

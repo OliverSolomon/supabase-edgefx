@@ -9,6 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      email_logs: {
+        Row: {
+          created_at: string | null
+          email_type: string
+          error_message: string | null
+          id: string
+          metadata: Json | null
+          sent_at: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email_type: string
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          sent_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email_type?: string
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          sent_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       reports: {
         Row: {
           created_at: string
@@ -17,6 +53,7 @@ export type Database = {
           reviewed_at: string | null
           reviewer_notes: string | null
           status: string | null
+          submission_timestamp: string | null
           updated_at: string
           user_id: string
         }
@@ -27,6 +64,7 @@ export type Database = {
           reviewed_at?: string | null
           reviewer_notes?: string | null
           status?: string | null
+          submission_timestamp?: string | null
           updated_at?: string
           user_id: string
         }
@@ -37,6 +75,7 @@ export type Database = {
           reviewed_at?: string | null
           reviewer_notes?: string | null
           status?: string | null
+          submission_timestamp?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -79,7 +118,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      identify_inactive_users: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          user_id: string
+          email: string
+          username: string
+          last_report_time: string
+        }[]
+      }
+      queue_reminder_emails: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never
